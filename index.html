@@ -72,10 +72,14 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/FontLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/geometries/TextGeometry.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
   
   <!-- GSAP for animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Custom styles -->
   <style>
@@ -113,6 +117,13 @@
       color: transparent;
     }
     
+    .gradient-text-alt {
+      background-image: linear-gradient(to right, #f97316, #ec4899, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
     /* Gradient button utility */
     .gradient-button {
       background-image: linear-gradient(to right, #8b5cf6, #3b82f6, #14b8a6);
@@ -121,6 +132,16 @@
     
     .gradient-button:hover {
       background-image: linear-gradient(to right, #7c3aed, #2563eb, #0d9488);
+      transform: scale(1.05);
+    }
+    
+    .gradient-button-alt {
+      background-image: linear-gradient(to right, #f97316, #ec4899, #8b5cf6);
+      transition: all 0.3s ease;
+    }
+    
+    .gradient-button-alt:hover {
+      background-image: linear-gradient(to right, #ea580c, #db2777, #7c3aed);
       transform: scale(1.05);
     }
     
@@ -260,9 +281,113 @@
     .bounce {
       animation: bounce 1.5s infinite;
     }
+    
+    /* Social media icons */
+    .social-icon {
+      transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      transform: translateY(-5px);
+    }
+    
+    /* 3D floating animation */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+    
+    .float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Glow effect */
+    .glow {
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .glow:hover {
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+    }
+    
+    /* Preloader */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid transparent;
+      border-top-color: #8b5cf6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* Light mode specific styles */
+    .light-mode {
+      background-color: #f9fafb;
+      color: #111827;
+    }
+    
+    .light-mode .bg-gray-900 {
+      background-color: #ffffff !important;
+    }
+    
+    .light-mode .bg-gray-800 {
+      background-color: #f3f4f6 !important;
+    }
+    
+    .light-mode .text-gray-300 {
+      color: #4b5563 !important;
+    }
+    
+    .light-mode .text-white {
+      color: #111827 !important;
+    }
+    
+    .light-mode .border-gray-700 {
+      border-color: #d1d5db !important;
+    }
+    
+    .light-mode .bg-gray-700 {
+      background-color: #e5e7eb !important;
+    }
+    
+    .light-mode .text-gray-200 {
+      color: #374151 !important;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white">
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader"></div>
+  </div>
+  
   <!-- Cursor Trail Canvas -->
   <canvas id="cursor-trail"></canvas>
   
@@ -271,9 +396,7 @@
   
   <!-- Theme Toggle -->
   <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-800 shadow-lg z-50 transition-all duration-300 hover:scale-110" aria-label="Toggle theme">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-    </svg>
+    <i class="fas fa-sun text-yellow-400 text-xl"></i>
   </button>
   
   <!-- Navbar -->
@@ -288,22 +411,34 @@
         
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-4">
-            <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">Home</a>
-            <a href="#about" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">About</a>
-            <a href="#skills" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">Skills</a>
-            <a href="#projects" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">Projects</a>
-            <a href="#contact" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">Contact</a>
+            <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-home mr-1"></i> Home
+            </a>
+            <a href="#about" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-user mr-1"></i> About
+            </a>
+            <a href="#education" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-graduation-cap mr-1"></i> Education
+            </a>
+            <a href="#experience" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-briefcase mr-1"></i> Experience
+            </a>
+            <a href="#skills" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-code mr-1"></i> Skills
+            </a>
+            <a href="#projects" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-project-diagram mr-1"></i> Projects
+            </a>
+            <a href="#contact" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:gradient-text transition-all duration-300">
+              <i class="fas fa-envelope mr-1"></i> Contact
+            </a>
           </div>
         </div>
         
         <div class="md:hidden">
           <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white focus:outline-none">
-            <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <i id="menu-icon" class="fas fa-bars text-xl"></i>
+            <i id="close-icon" class="fas fa-times text-xl hidden"></i>
           </button>
         </div>
       </div>
@@ -312,11 +447,27 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="mobile-menu md:hidden bg-gray-800">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-        <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">Home</a>
-        <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">About</a>
-        <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">Skills</a>
-        <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">Projects</a>
-        <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">Contact</a>
+        <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-home mr-2"></i> Home
+        </a>
+        <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-user mr-2"></i> About
+        </a>
+        <a href="#education" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-graduation-cap mr-2"></i> Education
+        </a>
+        <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-briefcase mr-2"></i> Experience
+        </a>
+        <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-code mr-2"></i> Skills
+        </a>
+        <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-project-diagram mr-2"></i> Projects
+        </a>
+        <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white">
+          <i class="fas fa-envelope mr-2"></i> Contact
+        </a>
       </div>
     </div>
   </nav>
@@ -339,21 +490,16 @@
       
       <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
         <button class="gradient-button text-white px-6 py-3 rounded-md font-medium" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
-          Explore My Work
+          <i class="fas fa-rocket mr-2"></i> Explore My Work
         </button>
         <button id="download-resume" class="border border-white text-white px-6 py-3 rounded-md font-medium transition-all duration-300 hover:scale-105">
-          <svg xmlns="http://www.w3.org/2000/svg" class="inline-block mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Download Resume
+          <i class="fas fa-download mr-2"></i> Download Resume
         </button>
       </div>
       
       <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 fade-in">
         <div class="bounce">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+          <i class="fas fa-chevron-down text-3xl text-gray-300 cursor-pointer" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})"></i>
         </div>
       </div>
     </div>
@@ -375,9 +521,9 @@
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div class="p-6 rounded-xl bg-gray-800 shadow-xl slide-in-left">
+        <div class="p-6 rounded-xl bg-gray-800 shadow-xl slide-in-left glow">
           <h3 class="text-2xl font-bold mb-4 gradient-text">
-            My Story
+            <i class="fas fa-user-circle mr-2"></i> My Story
           </h3>
           <div class="space-y-4 text-gray-300">
             <p>
@@ -395,931 +541,7 @@
               processes, enhancing user experiences, or solving complex technical challenges.
             </p>
           </div>
-        </div>
-        
-        <div class="space-y-6">
-          <h3 class="text-2xl font-bold mb-6 gradient-text">
-            My Journey
-          </h3>
-          <div class="journey-item flex items-start space-x-4 p-4 rounded-lg bg-gray-800 shadow-md transition-all duration-300 hover:shadow-xl fade-in">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
-                2022
-              </div>
-            </div>
-            <div>
-              <h4 class="text-lg font-semibold text-white">Started Software Engineering</h4>
-              <p class="text-gray-300">Began my journey at Quaid-e-Awam University of Engineering</p>
-            </div>
-          </div>
           
-          <div class="journey-item flex items-start space-x-4 p-4 rounded-lg bg-gray-800 shadow-md transition-all duration-300 hover:shadow-xl fade-in">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
-                2024
-              </div>
-            </div>
-            <div>
-              <h4 class="text-lg font-semibold text-white">First Project</h4>
-              <p class="text-gray-300">Developed University Entry Test System as a desktop application</p>
-            </div>
-          </div>
-          
-          <div class="journey-item flex items-start space-x-4 p-4 rounded-lg bg-gray-800 shadow-md transition-all duration-300 hover:shadow-xl fade-in">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
-                2024
-              </div>
-            </div>
-            <div>
-              <h4 class="text-lg font-semibold text-white">Java Internship</h4>
-              <p class="text-gray-300">Completed Java Programming Internship at CodeAlpha Infotech</p>
-            </div>
-          </div>
-          
-          <div class="journey-item flex items-start space-x-4 p-4 rounded-lg bg-gray-800 shadow-md transition-all duration-300 hover:shadow-xl fade-in">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
-                2025
-              </div>
-            </div>
-            <div>
-              <h4 class="text-lg font-semibold text-white">Backend Development</h4>
-              <p class="text-gray-300">Specialized in Java Backend Web Development at EcodeCamp</p>
-            </div>
-          </div>
-          
-          <div class="journey-item flex items-start space-x-4 p-4 rounded-lg bg-gray-800 shadow-md transition-all duration-300 hover:shadow-xl fade-in">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold">
-                2025
-              </div>
-            </div>
-            <div>
-              <h4 class="text-lg font-semibold text-white">School Management System</h4>
-              <p class="text-gray-300">Built comprehensive web-based School Management System</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Skills Section -->
-  <section id="skills" class="min-h-screen py-20 bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 fade-in">
-          <span class="gradient-text">My Skills</span>
-        </h2>
-        <div class="max-w-3xl mx-auto fade-in">
-          <p class="text-lg text-gray-300">
-            A comprehensive toolkit that enables me to build robust, scalable applications
-          </p>
-        </div>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Languages -->
-        <div class="skill-card p-6 rounded-xl bg-gray-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 fade-in">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <h3 class="ml-4 text-xl font-bold text-white">Languages</h3>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Java</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">SQL</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">HTML 5</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">CSS3</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">JavaScript</span>
-          </div>
-        </div>
-        
-        <!-- Frameworks -->
-        <div class="skill-card p-6 rounded-xl bg-gray-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 fade-in">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            </div>
-            <h3 class="ml-4 text-xl font-bold text-white">Frameworks</h3>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Spring Boot</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Bootstrap</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Tailwind CSS</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Hibernate</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Collection Framework</span>
-          </div>
-        </div>
-        
-        <!-- Databases -->
-        <div class="skill-card p-6 rounded-xl bg-gray-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 fade-in">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-              </svg>
-            </div>
-            <h3 class="ml-4 text-xl font-bold text-white">Databases</h3>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">MySQL</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">MongoDB</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Redis</span>
-          </div>
-        </div>
-        
-        <!-- Tools -->
-        <div class="skill-card p-6 rounded-xl bg-gray-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 fade-in">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-            </div>
-            <h3 class="ml-4 text-xl font-bold text-white">Tools</h3>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">IntelliJ IDE</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">VS Code</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Postman</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Git</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Linux</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">GitHub</span>
-          </div>
-        </div>
-        
-        <!-- Backend -->
-        <div class="skill-card p-6 rounded-xl bg-gray-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 fade-in">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-              </svg>
-            </div>
-            <h3 class="ml-4 text-xl font-bold text-white">Backend</h3>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">RESTful APIs</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Spring Security</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">JWT</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Swagger</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Kafka</span>
-          </div>
-        </div>
-        
-        <!-- Concepts -->
-        <div class="skill-card p-6 rounded-xl bg-gray-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 fade-in">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-              </svg>
-            </div>
-            <h3 class="ml-4 text-xl font-bold text-white">Concepts</h3>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">OOP</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">SOLID Principles</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">MVC Architecture</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">JUnit</span>
-            <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-200">Soft Skills</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Projects Section -->
-  <section id="projects" class="min-h-screen py-20 bg-gray-900 relative">
-    <div id="projects-canvas-container" class="absolute inset-0 z-0">
-      <canvas id="projects-canvas"></canvas>
-    </div>
-    
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 fade-in">
-          <span class="gradient-text">My Projects</span>
-        </h2>
-        <div class="max-w-3xl mx-auto fade-in">
-          <p class="text-lg text-gray-300">
-            Showcasing my work and technical expertise through real-world applications
-          </p>
-        </div>
-      </div>
-      
-      <div class="relative">
-        <div class="h-[600px] w-full flex items-center justify-center">
-          <div id="project-carousel" class="w-full max-w-3xl">
-            <!-- Project 1 -->
-            <div class="project-card p-6 rounded-xl bg-gray-900 text-white shadow-2xl">
-              <h3 class="text-2xl font-bold mb-2 gradient-text">
-                Abu-Hanan's Urban School
-              </h3>
-              <div class="flex items-center text-sm mb-4">
-                <span class="text-gray-300">01/2025-03/2025 • Hyderabad City, Pakistan</span>
-              </div>
-              <p class="mb-4 text-gray-300">
-                A comprehensive web-based School Management System built with Spring Boot, Spring Security, MongoDB Atlas, and Thymeleaf, featuring dedicated portals for Admin, Student, Teacher, and Manager. The system integrates RESTful APIs, Role-Based Authorization, JWT Authentication, and Redis caching for performance.
-              </p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">Spring Boot</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">MongoDB</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">Spring Security</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">JWT</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">Redis</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">Thymeleaf</span>
-              </div>
-              <div class="flex space-x-4">
-                <button class="gradient-button px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                  View Project
-                </button>
-                <button class="border border-gray-600 text-gray-300 px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
-                  Source Code
-                </button>
-              </div>
-            </div>
-            
-            <!-- Project 2 -->
-            <div class="project-card p-6 rounded-xl bg-gray-900 text-white shadow-2xl hidden">
-              <h3 class="text-2xl font-bold mb-2 gradient-text">
-                University Entry Test System
-              </h3>
-              <div class="flex items-center text-sm mb-4">
-                <span class="text-gray-300">02/2024-03/2024 • University Project</span>
-              </div>
-              <p class="mb-4 text-gray-300">
-                A Java-based desktop application built using JavaFX, Java Swing, and MySQL, designed to streamline university entry test management. The system features admin and student portals, where admins can create and manage test questions, set exam schedules, and evaluate results, while students can register, attempt tests, and view scores.
-              </p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">Java</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">JavaFX</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">Java Swing</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">MySQL</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">JDBC</span>
-              </div>
-              <div class="flex space-x-4">
-                <button class="gradient-button px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                  View Project
-                </button>
-                <button class="border border-gray-600 text-gray-300 px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
-                  Source Code
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-          <button id="prev-project" class="rounded-full bg-gray-800 text-white p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div class="flex space-x-2">
-            <button class="project-dot w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500" data-index="0"></button>
-            <button class="project-dot w-3 h-3 rounded-full bg-gray-700" data-index="1"></button>
-          </div>
-          <button id="next-project" class="rounded-full bg-gray-800 text-white p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Contact Section -->
-  <section id="contact" class="min-h-screen py-20 bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 fade-in">
-          <span class="gradient-text">Get In Touch</span>
-        </h2>
-        <div class="max-w-3xl mx-auto fade-in">
-          <p class="text-lg text-gray-300">
-            Have a project in mind or want to discuss opportunities? I'd love to hear from you!
-          </p>
-        </div>
-      </div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div class="p-8 rounded-xl bg-gray-900 shadow-xl slide-in-left">
-          <h3 class="text-2xl font-bold mb-6 gradient-text">
-            Contact Information
-          </h3>
-          <div class="space-y-6">
-            <!-- Email -->
-            <a href="mailto:muhammadmuzamilumrani@gmail.com" target="_blank" rel="noopener noreferrer" class="flex items-start space-x-4 p-4 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h4 class="text-lg font-semibold text-white">Email</h4>
-                <p class="text-gray-300">muhammadmuzamilumrani@gmail.com</p>
-              </div>
-            </a>
-            
-            <!-- Phone -->
-            <a href="tel:03147419170" target="_blank" rel="noopener noreferrer" class="flex items-start space-x-4 p-4 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </div>
-              <div>
-                <h4 class="text-lg font-semibold text-white">Phone</h4>
-                <p class="text-gray-300">03147419170</p>
-              </div>
-            </a>
-            
-            <!-- Location -->
-            <a href="https://maps.google.com/?q=Hyderabad,Sindh,Pakistan" target="_blank" rel="noopener noreferrer" class="flex items-start space-x-4 p-4 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <div>
-                <h4 class="text-lg font-semibold text-white">Location</h4>
-                <p class="text-gray-300">Hyderabad, Sindh, Pakistan</p>
-              </div>
-            </a>
-          </div>
-          
-          <div class="mt-8">
-            <h4 class="text-lg font-semibold mb-4 text-white">Connect With Me</h4>
-            <div class="flex space-x-4">
-              <!-- Social media icons would go here -->
-            </div>
-          </div>
-        </div>
-        
-        <div class="p-8 rounded-xl bg-gray-900 shadow-xl slide-in-right">
-          <h3 class="text-2xl font-bold mb-6 gradient-text">
-            Send Me a Message
-          </h3>
-          <form id="contact-form" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="space-y-2">
-                <label for="name" class="text-white">Your Name</label>
-                <input id="name" name="name" required class="w-full px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
-              </div>
-              <div class="space-y-2">
-                <label for="email" class="text-white">Your Email</label>
-                <input id="email" name="email" type="email" required class="w-full px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
-              </div>
-            </div>
-            <div class="space-y-2">
-              <label for="subject" class="text-white">Subject</label>
-              <input id="subject" name="subject" required class="w-full px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
-            </div>
-            <div class="space-y-2">
-              <label for="message" class="text-white">Message</label>
-              <textarea id="message" name="message" required rows="5" class="w-full px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-            </div>
-            <button type="submit" id="submit-button" class="w-full gradient-button py-3 rounded-md font-medium flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-              Send Message
-            </button>
-            <div id="form-success" class="hidden mt-4 p-3 rounded-md bg-green-500/20 text-green-500 text-center">
-              Message sent successfully! I'll get back to you soon.
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    
-    <div class="mt-20 text-center">
-      <p class="text-sm text-gray-400">
-        © <span id="current-year"></span> Muhammad Muzamil. All rights reserved.
-      </p>
-    </div>
-  </section>
-  
-  <!-- JavaScript -->
-  <script>
-    // Set current year
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-    
-    // Theme Toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-    let isDarkTheme = true;
-    
-    themeToggle.addEventListener('click', () => {
-      isDarkTheme = !isDarkTheme;
-      
-      if (isDarkTheme) {
-        body.classList.remove('bg-gray-50', 'text-gray-900');
-        body.classList.add('bg-gray-900', 'text-white');
-        themeToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>';
-      } else {
-        body.classList.remove('bg-gray-900', 'text-white');
-        body.classList.add('bg-gray-50', 'text-gray-900');
-        themeToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>';
-      }
-      
-      // Update all theme-dependent elements
-      updateThemeElements();
-    });
-    
-    function updateThemeElements() {
-      const navbar = document.getElementById('navbar');
-      const navLinks = document.querySelectorAll('.nav-link');
-      const mobileMenu = document.getElementById('mobile-menu');
-      
-      if (isDarkTheme) {
-        navbar.classList.remove('bg-white/80');
-        navbar.classList.add('bg-gray-900/80');
-        mobileMenu.classList.remove('bg-white');
-        mobileMenu.classList.add('bg-gray-800');
-        
-        navLinks.forEach(link => {
-          link.classList.remove('text-gray-700');
-          link.classList.add('text-gray-300');
-        });
-      } else {
-        navbar.classList.remove('bg-gray-900/80');
-        navbar.classList.add('bg-white/80');
-        mobileMenu.classList.remove('bg-gray-800');
-        mobileMenu.classList.add('bg-white');
-        
-        navLinks.forEach(link => {
-          link.classList.remove('text-gray-300');
-          link.classList.add('text-gray-700');
-        });
-      }
-    }
-    
-    // Mobile Menu Toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuIcon = document.getElementById('menu-icon');
-    const closeIcon = document.getElementById('close-icon');
-    
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('open');
-      menuIcon.classList.toggle('hidden');
-      closeIcon.classList.toggle('hidden');
-    });
-    
-    // Close mobile menu when clicking on a link
-    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-    mobileMenuLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        menuIcon.classList.remove('hidden');
-        closeIcon.classList.add('hidden');
-      });
-    });
-    
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 50) {
-        if (isDarkTheme) {
-          navbar.classList.add('bg-gray-900/80', 'backdrop-blur-md', 'shadow-lg');
-        } else {
-          navbar.classList.add('bg-white/80', 'backdrop-blur-md', 'shadow-lg');
-        }
-      } else {
-        navbar.classList.remove('bg-gray-900/80', 'bg-white/80', 'backdrop-blur-md', 'shadow-lg');
-      }
-    });
-    
-    // Progress bar
-    window.addEventListener('scroll', () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / totalHeight) * 100;
-      document.getElementById('progress-bar').style.width = `${progress}%`;
-    });
-    
-    // Scroll animations
-    const fadeElements = document.querySelectorAll('.fade-in');
-    const slideLeftElements = document.querySelectorAll('.slide-in-left');
-    const slideRightElements = document.querySelectorAll('.slide-in-right');
-    
-    const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('active');
-    }
-  });
-}, {
-  threshold: 0.1
-});
+          <div class="mt-6 flex space-x-4">
+            <a href="https://www.linkedin.com/in/muhammad-muzamil-b69b5b299" target="_blank" class="social-icon text-2xl text-blue-400 hover:text-blue-500">
 
-    fadeElements.forEach(element => {
-      observer.observe(element);
-    });
-    
-    slideLeftElements.forEach(element => {
-      observer.observe(element);
-    });
-    
-    slideRightElements.forEach(element => {
-      observer.observe(element);
-    });
-    
-    // Project Carousel
-    const projectCards = document.querySelectorAll('.project-card');
-    const projectDots = document.querySelectorAll('.project-dot');
-    const prevButton = document.getElementById('prev-project');
-    const nextButton = document.getElementById('next-project');
-    let currentProject = 0;
-    
-    function showProject(index) {
-      projectCards.forEach((card, i) => {
-        if (i === index) {
-          card.classList.remove('hidden');
-          card.classList.add('active');
-        } else {
-          card.classList.add('hidden');
-          card.classList.remove('active');
-        }
-      });
-      
-      projectDots.forEach((dot, i) => {
-        if (i === index) {
-          dot.classList.remove('bg-gray-700');
-          dot.classList.add('bg-gradient-to-r', 'from-purple-500', 'via-blue-500', 'to-teal-500');
-        } else {
-          dot.classList.add('bg-gray-700');
-          dot.classList.remove('bg-gradient-to-r', 'from-purple-500', 'via-blue-500', 'to-teal-500');
-        }
-      });
-      
-      currentProject = index;
-    }
-    
-    prevButton.addEventListener('click', () => {
-      const newIndex = currentProject === 0 ? projectCards.length - 1 : currentProject - 1;
-      showProject(newIndex);
-    });
-    
-    nextButton.addEventListener('click', () => {
-      const newIndex = currentProject === projectCards.length - 1 ? 0 : currentProject + 1;
-      showProject(newIndex);
-    });
-    
-    projectDots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        showProject(i);
-      });
-    });
-    
-    // Initialize first project
-    showProject(0);
-    
-    // Contact Form
-    const contactForm = document.getElementById('contact-form');
-    const submitButton = document.getElementById('submit-button');
-    const formSuccess = document.getElementById('form-success');
-    
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      // Simulate form submission
-      submitButton.innerHTML = 'Sending...';
-      submitButton.disabled = true;
-      
-      setTimeout(() => {
-        submitButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send Message';
-        submitButton.disabled = false;
-        formSuccess.classList.remove('hidden');
-        contactForm.reset();
-        
-        setTimeout(() => {
-          formSuccess.classList.add('hidden');
-        }, 3000);
-      }, 1500);
-      
-      // In a real implementation, you would send the form data to an API endpoint
-      // const formData = new FormData(contactForm);
-      // fetch('/api/contact', {
-      //   method: 'POST',
-      //   body: formData
-      // })
-      // .then(response => response.json())
-      // .then(data => {
-      //   submitButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send Message';
-      //   submitButton.disabled = false;
-      //   formSuccess.classList.remove('hidden');
-      //   contactForm.reset();
-      //   
-      //   setTimeout(() => {
-      //     formSuccess.classList.add('hidden');
-      //   }, 3000);
-      // })
-      // .catch(error => {
-      //   console.error('Error:', error);
-      //   submitButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> Send Message';
-      //   submitButton.disabled = false;
-      // });
-    });
-    
-    // Download Resume
-    document.getElementById('download-resume').addEventListener('click', () => {
-      // In a real implementation, this would download the actual resume
-      const link = document.createElement('a');
-      link.href = '/resume.pdf'; // This would be the actual path to the resume
-      link.download = 'Muhammad_Muzamil_Resume.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-    
-    // Cursor Trail
-    const cursorCanvas = document.getElementById('cursor-trail');
-    const ctx = cursorCanvas.getContext('2d');
-    
-    // Set canvas size
-    function resizeCanvas() {
-      cursorCanvas.width = window.innerWidth;
-      cursorCanvas.height = window.innerHeight;
-    }
-    
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    
-    let particles = [];
-    
-    function createParticle(x, y) {
-      const size = Math.random() * 3 + 1;
-      const colors = isDarkTheme ? ['#8b5cf6', '#3b82f6', '#14b8a6'] : ['#a855f7', '#3b82f6', '#0d9488'];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const vx = (Math.random() - 0.5) * 2;
-      const vy = (Math.random() - 0.5) * 2;
-      const maxLife = Math.random() * 50 + 50;
-      
-      particles.push({
-        x,
-        y,
-        size,
-        color,
-        vx,
-        vy,
-        life: 0,
-        maxLife
-      });
-    }
-    
-    function updateParticles() {
-      particles = particles.filter(p => p.life < p.maxLife);
-      
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life += 1;
-        p.size = p.size * (1 - p.life / p.maxLife);
-      });
-    }
-    
-    function drawParticles() {
-      ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-      
-      particles.forEach(p => {
-        ctx.globalAlpha = 1 - p.life / p.maxLife;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-    
-    window.addEventListener('mousemove', e => {
-      const x = e.clientX;
-      const y = e.clientY;
-      
-      for (let i = 0; i < 3; i++) {
-        createParticle(x, y);
-      }
-    });
-    
-    function animate() {
-      updateParticles();
-      drawParticles();
-      requestAnimationFrame(animate);
-    }
-    
-    animate();
-    
-    // Three.js Hero Section
-    function initHeroCanvas() {
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      
-      const renderer = new THREE.WebGLRenderer({ 
-        canvas: document.getElementById('hero-canvas'),
-        alpha: true,
-        antialias: true
-      });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      
-      // Lights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
-      
-      const spotLight = new THREE.SpotLight(0xffffff, 1);
-      spotLight.position.set(10, 10, 10);
-      spotLight.angle = 0.15;
-      spotLight.penumbra = 1;
-      scene.add(spotLight);
-      
-      const pointLight = new THREE.PointLight(0xffffff, 0.5);
-      pointLight.position.set(-10, -10, -10);
-      scene.add(pointLight);
-      
-      // Load font for 3D text
-      const fontLoader = new THREE.FontLoader();
-      
-      // Create a placeholder for the text while font loads
-      const geometry = new THREE.PlaneGeometry(10, 1);
-      const material = new THREE.MeshStandardMaterial({ 
-        color: 0x8b5cf6,
-        transparent: true,
-        opacity: 0
-      });
-      const placeholder = new THREE.Mesh(geometry, material);
-      scene.add(placeholder);
-      
-      // Try to load a font or use a default approach
-      try {
-        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) {
-          // First text: MUHAMMAD
-          const textGeometry1 = new THREE.TextGeometry('MUHAMMAD', {
-            font: font,
-            size: 0.5,
-            height: 0.1,
-            curveSegments: 12
-          });
-          
-          const textMaterial1 = new THREE.MeshStandardMaterial({ color: 0x8b5cf6 });
-          const textMesh1 = new THREE.Mesh(textGeometry1, textMaterial1);
-          textMesh1.position.set(-2.5, 0.5, 0);
-          scene.add(textMesh1);
-          
-          // Second text: MUZAMIL
-          const textGeometry2 = new THREE.TextGeometry('MUZAMIL', {
-            font: font,
-            size: 0.5,
-            height: 0.1,
-            curveSegments: 12
-          });
-          
-          const textMaterial2 = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
-          const textMesh2 = new THREE.Mesh(textGeometry2, textMaterial2);
-          textMesh2.position.set(-1.5, -0.2, 0);
-          scene.add(textMesh2);
-          
-          // Remove placeholder
-          scene.remove(placeholder);
-        });
-      } catch (error) {
-        console.error('Error loading font:', error);
-        // Create a fallback visual element
-        const fallbackGeometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-        const fallbackMaterial = new THREE.MeshStandardMaterial({ 
-          color: 0x8b5cf6,
-          metalness: 0.5,
-          roughness: 0.2
-        });
-        const fallbackMesh = new THREE.Mesh(fallbackGeometry, fallbackMaterial);
-        scene.add(fallbackMesh);
-      }
-      
-      // Add a floor
-      const floorGeometry = new THREE.PlaneGeometry(10, 10);
-      const floorMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x111111, 
-        roughness: 0.8, 
-        metalness: 0.2 
-      });
-      const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-      floor.rotation.x = -Math.PI / 2;
-      floor.position.y = -1;
-      floor.position.z = -1;
-      scene.add(floor);
-      
-      // Camera position
-      camera.position.z = 5;
-      
-      // OrbitControls
-      const controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableZoom = false;
-      controls.enablePan = false;
-      controls.enableRotate = true;
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.5;
-      
-      // Animation loop
-      function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-      }
-      
-      animate();
-      
-      // Handle window resize
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-    }
-    
-    // Initialize Three.js scenes
-    initHeroCanvas();
-    
-    // Projects Canvas (simplified version)
-    function initProjectsCanvas() {
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      
-      const renderer = new THREE.WebGLRenderer({ 
-        canvas: document.getElementById('projects-canvas'),
-        alpha: true,
-        antialias: true
-      });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      
-      // Lights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
-      
-      const spotLight = new THREE.SpotLight(0xffffff, 1);
-      spotLight.position.set(10, 10, 10);
-      scene.add(spotLight);
-      
-      // Background particles
-      const particlesGeometry = new THREE.BufferGeometry();
-      const particlesCount = 1000;
-      
-      const posArray = new Float32Array(particlesCount * 3);
-      
-      for(let i = 0; i < particlesCount * 3; i++) {
-        posArray[i] = (Math.random() - 0.5) * 10;
-      }
-      
-      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-      
-      const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.005,
-        color: 0x8b5cf6,
-        transparent: true
-      });
-      
-      const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-      scene.add(particlesMesh);
-      
-      // Camera position
-      camera.position.z = 5;
-      
-      // Animation loop
-      function animate() {
-        requestAnimationFrame(animate);
-        particlesMesh.rotation.x += 0.0005;
-        particlesMesh.rotation.y += 0.0005;
-        renderer.render(scene, camera);
-      }
-      
-      animate();
-      
-      // Handle window resize
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-    }
-    
-    initProjectsCanvas();
-  </script>
-</body>
-</html>
