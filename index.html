@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muhammad Muzamil | Java Developer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Preload critical assets -->
+  <link rel="preload" href="js/three.min.js" as="script">
+  <link rel="preload" href="js/main.js" as="script">
+  <link rel="preload" href="css/style.css" as="style">
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="loader-spinner"></div>
+      <div class="loader-text">Loading Experience<span class="loader-dots">...</span></div>
+    </div>
+  </div>
+
+  <!-- Main Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="navigation">
+    <button class="nav-item active" data-section="intro">
+      <i class="nav-icon fas fa-code"></i>
+      <span class="nav-label">Intro</span>
+    </button>
+    <button class="nav-item" data-section="about">
+      <i class="nav-icon fas fa-user"></i>
+      <span class="nav-label">About</span>
+    </button>
+    <button class="nav-item" data-section="experience">
+      <i class="nav-icon fas fa-briefcase"></i>
+      <span class="nav-label">Experience</span>
+    </button>
+    <button class="nav-item" data-section="projects">
+      <i class="nav-icon fas fa-folder"></i>
+      <span class="nav-label">Projects</span>
+    </button>
+    <button class="nav-item" data-section="skills">
+      <i class="nav-icon fas fa-lightbulb"></i>
+      <span class="nav-label">Skills</span>
+    </button>
+    <button class="nav-item" data-section="education">
+      <i class="nav-icon fas fa-graduation-cap"></i>
+      <span class="nav-label">Education</span>
+    </button>
+    <button class="nav-item" data-section="contact">
+      <i class="nav-icon fas fa-envelope"></i>
+      <span class="nav-label">Contact</span>
+    </button>
+  </nav>
+
+  <!-- Content Sections -->
+  <main class="content">
+    <!-- Intro Section -->
+    <section id="intro" class="section active">
+      <div class="section-content intro-content">
+        <h1 class="intro-name">MUHAMMAD MUZAMIL</h1>
+        <h2 class="intro-title">Java Developer</h2>
+        <p class="intro-description">
+          A passionate Backend Java Developer specializing in building scalable, high-performance applications
+          with expertise in Java technologies, API development, and database management.
+        </p>
+        <button class="cta-button">Explore Portfolio</button>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+      <div class="section-content about-content">
+        <h2 class="section-title">ABOUT ME</h2>
+        <div class="about-card">
+          <p class="about-summary">
+            "I'm a Backend Java Developer passionate about building scalable, high-performance applications. I
+            specialize in Java technologies, API development, and database management, with a solid grasp of
+            frontend technologies. I love solving complex problems, optimizing performance, and constantly
+            learning to stay ahead in the ever-evolving tech world."
+          </p>
+        </div>
+        <div class="contact-info">
+          <div class="contact-card">
+            <i class="fas fa-phone"></i>
+            <span>03147419170</span>
+          </div>
+          <div class="contact-card">
+            <i class="fas fa-envelope"></i>
+            <span>muhammadmuzamilumrani@gmail.com</span>
+          </div>
+          <div class="contact-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Hyderabad, Sindh Pakistan</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+      <div class="section-content experience-content">
+        <h2 class="section-title">EXPERIENCE</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-header">
+              <div class="timeline-company">
+                <i class="fas fa-building"></i>
+                <h3>EcodeCamp (Pvt.Ltd)</h3>
+              </div>
+              <div class="timeline-period">
+                <i class="fas fa-calendar"></i>
+                <span>11/2024-01/2025</span>
+              </div>
+            </div>
+            <div class="timeline-position">Java Backend Web Development</div>
+            <div class="timeline-location">Johar Town, Lahore, Pakistan</div>
+            <ul class="timeline-responsibilities">
+              <li>Built a User Management System with role-based access control, improving security and usability.</li>
+              <li>Developed and optimized RESTful APIs using Spring Boot, ensuring high performance and scalability.</li>
+              <li>Designed and implemented secure authentication & authorization using Spring Security & JWT.</li>
+              <li>Integrated MongoDB for efficient data storage and retrieval, optimizing query performance.</li>
+              <li>Implemented caching with Redis, reducing response times and enhancing system performance.</li>
+            </ul>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-header">
+              <div class="timeline-company">
+                <i class="fas fa-building"></i>
+                <h3>CodeAlpha Infotech</h3>
+              </div>
+              <div class="timeline-period">
+                <i class="fas fa-calendar"></i>
+                <span>07/2024-08/2024</span>
+              </div>
+            </div>
+            <div class="timeline-position">Java Programming Internship</div>
+            <ul class="timeline-responsibilities">
+              <li>Built a Student Grade Tracker system, improving data management and accuracy.</li>
+              <li>Worked on a Hotel Reservation System, integrating multiple room categories and payment methods.</li>
+              <li>Applied OOP principles and best coding practices to develop clean and maintainable code.</li>
+              <li>Gained hands-on experience with version control (Git) and deployment strategies.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+      <div class="section-content projects-content">
+        <h2 class="section-title">PROJECTS</h2>
+        <div class="projects-grid">
+          <div class="project-card">
+            <div class="project-header">
+              <div class="project-title-container">
+                <i class="fas fa-folder"></i>
+                <h3 class="project-title">Abu-Hanan's Urban School</h3>
+              </div>
+              <div class="project-period">
+                <i class="fas fa-calendar"></i>
+                <span>01/2025-03/2025</span>
+              </div>
+            </div>
+            <div class="project-type">Web-Based Application</div>
+            <div class="project-location">Hyderabad City, Pakistan</div>
+            <p class="project-description">
+              A comprehensive web-based School Management System built with Spring Boot, Spring Security, MongoDB Atlas, and Thymeleaf, featuring dedicated portals for Admin, Student, Teacher, and Manager.
+            </p>
+            <div class="project-tech">
+              <span class="tech-badge">Spring Boot</span>
+              <span class="tech-badge">Spring Security</span>
+              <span class="tech-badge">MongoDB Atlas</span>
+              <span class="tech-badge">Thymeleaf</span>
+              <span class="tech-badge">RESTful APIs</span>
+              <span class="tech-badge">JWT Authentication</span>
+              <span class="tech-badge">Redis</span>
+              <span class="tech-badge">MVC Architecture</span>
+              <span class="tech-badge">Jakarta Validation</span>
+              <span class="tech-badge">Global Exception Handling</span>
+              <span class="tech-badge">YAML Configuration</span>
+              <span class="tech-badge">Lombok</span>
+              <span class="tech-badge">JUnit</span>
+              <span class="tech-badge">Postman</span>
+              <span class="tech-badge">IntelliJ IDE</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i>
+                View Project
+              </a>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-header">
+              <div class="project-title-container">
+                <i class="fas fa-folder"></i>
+                <h3 class="project-title">University Entry Test System</h3>
+              </div>
+              <div class="project-period">
+                <i class="fas fa-calendar"></i>
+                <span>02/2024-03/2024</span>
+              </div>
+            </div>
+            <div class="project-type">Desktop Application</div>
+            <p class="project-description">
+              A Java-based desktop application built using JavaFX, Java Swing, and MySQL, designed to streamline university entry test management.
+            </p>
+            <div class="project-tech">
+              <span class="tech-badge">Java</span>
+              <span class="tech-badge">JavaFX</span>
+              <span class="tech-badge">Java Swing</span>
+              <span class="tech-badge">MySQL</span>
+              <span class="tech-badge">JDBC</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i>
+                View Project
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+      <div class="section-content skills-content">
+        <h2 class="section-title">SKILLS</h2>
+        <div class="skills-container">
+          <div class="skill-category">
+            <h3 class="category-title">Languages</h3>
+            <div class="skills-list">
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Java</span>
+                  <span class="skill-level">95%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 95%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">SQL</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">HTML 5</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">CSS3</span>
+                  <span class="skill-level">80%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 80%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">JavaScript</span>
+                  <span class="skill-level">75%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="skill-category">
+            <h3 class="category-title">Frameworks</h3>
+            <div class="skills-list">
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Spring Boot</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Bootstrap</span>
+                  <span class="skill-level">80%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 80%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Tailwind CSS</span>
+                  <span class="skill-level">75%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 75%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Hibernate</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Collection Framework</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="skill-category">
+            <h3 class="category-title">Databases</h3>
+            <div class="skills-list">
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">MySQL</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">MongoDB</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Redis</span>
+                  <span class="skill-level">80%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 80%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="skill-category">
+            <h3 class="category-title">Tools</h3>
+            <div class="skills-list">
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">IntelliJ IDE</span>
+                  <span class="skill-level">95%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 95%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">VS Code</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Postman</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Git</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Linux</span>
+                  <span class="skill-level">80%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 80%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">GitHub</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="skill-category">
+            <h3 class="category-title">Other Skills</h3>
+            <div class="skills-list">
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Swagger</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">RESTful APIs</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">OOP</span>
+                  <span class="skill-level">95%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 95%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">SOLID Principles</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">MVC Architecture</span>
+                  <span class="skill-level">85%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Kafka</span>
+                  <span class="skill-level">75%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 75%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">Soft Skills</span>
+                  <span class="skill-level">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">JUnit</span>
+                  <span class="skill-level">80%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 80%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="section">
+      <div class="section-content education-content">
+        <h2 class="section-title">EDUCATION</h2>
+        <div class="education-card">
+          <div class="education-header">
+            <div class="education-title-container">
+              <i class="fas fa-graduation-cap"></i>
+              <h3>Quaid-e-Awam University of Engineering</h3>
+            </div>
+            <div class="education-period">
+              <i class="fas fa-calendar"></i>
+              <span>12/2022-12/2026</span>
+            </div>
+          </div>
+          <div class="education-degree">BE Software Engineering</div>
+        </div>
+        
+        <div class="certification-card">
+          <div class="certification-header">
+            <i class="fas fa-award"></i>
+            <div>
+              <h3>Web Development Professional Certification</h3>
+              <p>Institute of Management Technology and Finance University of Portugal</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="languages-card">
+          <h3 class="languages-title">
+            <i class="fas fa-language"></i>
+            Languages
+          </h3>
+          <div class="languages-grid">
+            <div class="language-item">
+              <p class="language-name">English</p>
+              <p class="language-level">Advanced</p>
+            </div>
+            <div class="language-item">
+              <p class="language-name">Sindhi</p>
+              <p class="language-level">Native</p>
+            </div>
+            <div class="language-item">
+              <p class="language-name">Urdu</p>
+              <p class="language-level">Proficient</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+      <div class="section-content contact-content">
+        <h2 class="section-title">CONTACT</h2>
+        <div class="contact-form-container">
+          <form id="contact-form" class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Your Name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Your Email" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" placeholder="Subject" required>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Send Message</button>
+          </form>
+        </div>
+        
+        <div class="social-links">
+          <a href="#" class="social-link">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="#" class="social-link">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="social-link">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="mailto:muhammadmuzamilumrani@gmail.com" class="social-link">
+            <i class="fas fa-envelope"></i>
+          </a>
+          <a href="tel:03147419170" class="social-link">
+            <i class="fas fa-phone"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/three.min.js"></script>
+  <script src="js/gsap.min.js"></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
